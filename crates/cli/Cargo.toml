@@ -1,0 +1,13 @@
+[package]
+name = "quackless-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Command-line REPL for the Quackless engine"
+
+[[bin]]
+name = "quackless"
+path = "src/main.rs"
+
+[dependencies]
+quackless-core = { path = "../core" }

@@ -1,0 +1,9 @@
+-- Minimized fuzzer mismatch. Setup, query, then DuckDB's rows as JSON.
+CREATE TABLE t1(a INTEGER, b INTEGER, c VARCHAR, d DOUBLE);
+CREATE TABLE t2(a INTEGER, e INTEGER, f VARCHAR);
+INSERT INTO t1 VALUES (8, -4, 'Apple', 53.53), (19, 20, NULL, 103.19), (16, -3, 'Apple', -31.05), (NULL, -1, 'grape', -32.80), (NULL, 7, 'Apple', 89.71), (3, 12, 'fig', NULL), (10, 3, 'date', 11.24), (10, 14, 'banana', 94.83), (-4, 1, NULL, NULL), (NULL, 16, 'grape', 78.39), (-1, 6, NULL, 145.43), (-4, 17, 'kiwi', 51.75), (2, 19, 'fig', NULL), (-2, 16, NULL, 57.62), (6, 13, 'banana', 145.57), (0, -1, 'date', NULL), (NULL, -5, 'kiwi', 99.88), (9, 17, 'cherry', -39.82), (18, 5, 'kiwi', 129.34), (NULL, 7, '', 3.29), (17, 19, NULL, -17.84), (-1, -5, 'kiwi', -33.89), (11, 4, 'cherry', 118.78), (20, 8, 'banana', 144.10), (5, NULL, 'cherry', NULL), (14, 11, 'Apple', -28.80), (11, 9, '', -42.16), (3, 18, 'kiwi', 87.04), (17, 12, NULL, 41.63), (NULL, NULL, 'grape', 32.05), (9, 8, 'date', -36.28), (4, 13, 'apple', -41.75);
+INSERT INTO t2 VALUES (15, -2, 'apple'), (6, 3, 'date'), (-5, 15, NULL), (1, 18, 'grape'), (11, 18, 'fig'), (NULL, 5, 'fig'), (NULL, NULL, 'kiwi'), (5, 7, 'apple'), (0, 9, 'apple'), (17, 16, 'Apple'), (7, 14, 'cherry'), (15, NULL, 'banana'), (11, -3, 'kiwi'), (15, 18, 'grape');
+-- query
+SELECT (b % 3) AS c0, c AS c1, max((b / a)) AS c2 FROM t1 GROUP BY (b % 3), c;
+-- expected
+[[2,"kiwi",0.2777777777777778],[0,"kiwi",6.0],[null,"grape",null],[2,"banana",1.4],[-1,"date","-inf"],[1,"cherry",0.3636363636363637],[0,"",0.8181818181818182],[-1,"Apple",-0.5],[1,"fig",9.5],[1,"Apple",null],[null,"cherry",null],[-2,"kiwi",5.0],[0,"Apple",-0.1875],[2,"Apple",0.7857142857142857],[1,null,1.1176470588235294],[1,"grape",null],[1,"apple",3.25],[0,"date",0.3],[2,"date",0.8888888888888888],[2,null,1.0526315789473684],[0,null,0.7058823529411765],[-1,"grape",null],[1,"banana",2.1666666666666665],[2,"cherry",1.8888888888888888],[1,"",null],[0,"fig",4.0]]

@@ -1,0 +1,13 @@
+/target
+/data/sf*
+/.venv
+node_modules
+/web/dist
+
+*.log
+.DS_Store
+/data/slt
+/web/.next
+/web/out
+.vercel
+.env*.local

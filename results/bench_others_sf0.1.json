@@ -1,0 +1,164 @@
+{
+ "sqlite_cap_s": 60,
+ "sf": "0.1",
+ "runs": 5,
+ "cpu_count": 18,
+ "duckdb_version": "2.0.0",
+ "sqlite_version": "3.53.1",
+ "queries": [
+  {
+   "q": 1,
+   "duckdb_1t_ms": 7.75,
+   "duckdb_mt_ms": 2.53,
+   "sqlite_ms": 207.49,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 2,
+   "duckdb_1t_ms": 1.45,
+   "duckdb_mt_ms": 2.23,
+   "sqlite_ms": 43.36,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 3,
+   "duckdb_1t_ms": 2.03,
+   "duckdb_mt_ms": 2.27,
+   "sqlite_ms": 125.58,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 4,
+   "duckdb_1t_ms": 1.71,
+   "duckdb_mt_ms": 1.62,
+   "sqlite_ms": 218.93,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 5,
+   "duckdb_1t_ms": 2.35,
+   "duckdb_mt_ms": 2.47,
+   "sqlite_ms": 302.85,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 6,
+   "duckdb_1t_ms": 0.91,
+   "duckdb_mt_ms": 0.66,
+   "sqlite_ms": 20.26,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 7,
+   "duckdb_1t_ms": 2.69,
+   "duckdb_mt_ms": 2.54,
+   "sqlite_ms": 114.34,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 8,
+   "duckdb_1t_ms": 2.52,
+   "duckdb_mt_ms": 2.5,
+   "sqlite_ms": 1243.27,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 9,
+   "duckdb_1t_ms": 9.02,
+   "duckdb_mt_ms": 5.28,
+   "sqlite_ms": 1147.79,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 10,
+   "duckdb_1t_ms": 3.9,
+   "duckdb_mt_ms": 3.39,
+   "sqlite_ms": 45.58,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 11,
+   "duckdb_1t_ms": 2.54,
+   "duckdb_mt_ms": 2.73,
+   "sqlite_ms": 66.53,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 12,
+   "duckdb_1t_ms": 3.6,
+   "duckdb_mt_ms": 2.3,
+   "sqlite_ms": 59.64,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 13,
+   "duckdb_1t_ms": 11.12,
+   "duckdb_mt_ms": 9.96,
+   "sqlite_ms": 267.14,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 14,
+   "duckdb_1t_ms": 1.47,
+   "duckdb_mt_ms": 1.39,
+   "sqlite_ms": 24.16,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 15,
+   "duckdb_1t_ms": 1.35,
+   "duckdb_mt_ms": 1.31,
+   "sqlite_ms": 21.83,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 16,
+   "duckdb_1t_ms": 2.52,
+   "duckdb_mt_ms": 3.91,
+   "sqlite_ms": 16.36,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 17,
+   "duckdb_1t_ms": 1.99,
+   "duckdb_mt_ms": 2.3,
+   "sqlite_ms": 8622.23,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 18,
+   "duckdb_1t_ms": 6.8,
+   "duckdb_mt_ms": 3.29,
+   "sqlite_ms": 180.17,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 19,
+   "duckdb_1t_ms": 6.34,
+   "duckdb_mt_ms": 3.12,
+   "sqlite_ms": null,
+   "sqlite_matches_duckdb": null
+  },
+  {
+   "q": 20,
+   "duckdb_1t_ms": 2.39,
+   "duckdb_mt_ms": 2.86,
+   "sqlite_ms": 10512.29,
+   "sqlite_matches_duckdb": true
+  },
+  {
+   "q": 21,
+   "duckdb_1t_ms": 5.74,
+   "duckdb_mt_ms": 3.86,
+   "sqlite_ms": null,
+   "sqlite_matches_duckdb": null
+  },
+  {
+   "q": 22,
+   "duckdb_1t_ms": 1.76,
+   "duckdb_mt_ms": 2.47,
+   "sqlite_ms": 2172.55,
+   "sqlite_matches_duckdb": true
+  }
+ ]
+}
