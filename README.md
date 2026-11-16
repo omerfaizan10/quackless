@@ -2,7 +2,7 @@
 
 A columnar, vectorized SQL query engine I wrote from scratch in Rust. It compiles to WebAssembly and runs in the browser, and I check every answer it gives against DuckDB.
 
-**Live workbench:** https://quackless.vercel.app (TPC-H sample loaded in the page, with the query plan replayed operator by operator)
+**Live workbench:** https://quackless-sql.vercel.app (TPC-H sample loaded in the page, with the query plan replayed operator by operator)
 
 ## Results
 

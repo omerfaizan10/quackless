@@ -1,5 +1,5 @@
 // Public site identity, used by metadata, the sitemap and the footer.
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://quackless.vercel.app").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://quackless-sql.vercel.app").replace(/\/$/, "");
 export const SITE_NAME = "Quackless";
 export const SITE_TITLE = "Quackless: a vectorized SQL engine in Rust, checked against DuckDB";
 export const SITE_DESCRIPTION =
