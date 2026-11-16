@@ -548,6 +548,141 @@ table.bt tfoot td {
   padding: 30px 0;
 }
 
+/* ------------------------------------------------------------------ workbench: rows profile, tables */
+
+.note {
+  font-size: 14px;
+  color: var(--ink-2);
+  border-left: 2px solid var(--rule-2);
+  padding: 4px 10px;
+  margin: 12px 0 0;
+}
+
+.linkish {
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 4px 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+table.prof {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.prof th:nth-child(1) {
+  width: 46%;
+}
+table.prof th:nth-child(2) {
+  width: 24%;
+}
+table.prof th:nth-child(3) {
+  width: 15%;
+}
+table.prof th:nth-child(4) {
+  width: 15%;
+}
+
+table.prof td {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 12.5px;
+  vertical-align: middle;
+}
+
+.prof-op {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.prof-op .m {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.prof-detail {
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prof-bar span {
+  display: block;
+  height: 8px;
+  background: var(--ink-2);
+  border-radius: 0 2px 2px 0;
+}
+
+.tables {
+  border-top: 0.75px solid var(--rule);
+}
+
+.tables details {
+  border-bottom: 0.75px solid var(--rule);
+}
+
+.tables summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 7px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.tables summary::-webkit-details-marker {
+  display: none;
+}
+
+.tables summary .m {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.tables summary .m::before {
+  content: "+ ";
+  color: var(--ink-3);
+}
+
+.tables details[open] summary .m::before {
+  content: "\2212  ";
+}
+
+.tables .cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-2);
+  padding: 0 0 8px;
+}
+
+.tables .cols i {
+  font-style: normal;
+  color: var(--ink-3);
+}
+
+.btn.sm {
+  font-size: 12px;
+  min-height: 30px;
+  padding: 4px 10px;
+  margin: 0 0 10px;
+}
+
 /* ------------------------------------------------------------------ paper pages */
 
 .page-head {
@@ -622,6 +757,191 @@ footer.colophon .wrap {
   flex-wrap: wrap;
 }
 
+/* ------------------------------------------------------------------ SQL reference, casebook */
+
+.toc ol {
+  columns: 2;
+  column-gap: 32px;
+  margin: 18px 0 8px;
+  padding-left: 22px;
+  font-size: 15px;
+}
+
+.example {
+  margin: 18px 0 22px;
+}
+
+.example-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.example-head h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.tiny-link {
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.example-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+
+pre.sql,
+pre.out {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+}
+
+pre.sql {
+  background: var(--sheet);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+pre.out {
+  background: var(--code);
+  color: var(--ink-2);
+}
+
+.small-code {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.case-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 18px 0 10px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+
+.chips button {
+  font-family: var(--mono);
+  font-size: 12px;
+  border: 1px solid var(--rule-2);
+  background: var(--sheet);
+  color: var(--ink-2);
+  border-radius: 2px;
+  padding: 5px 9px;
+  min-height: 32px;
+  cursor: pointer;
+}
+
+.chips button[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--sheet);
+}
+
+ol.cases {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px;
+  border-top: 0.75px solid var(--ink);
+}
+
+.case {
+  padding: 12px 0 14px;
+  border-bottom: 0.75px solid var(--rule);
+}
+
+.paper li.case {
+  margin: 0;
+}
+
+.case-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.case-head .m {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.case-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.case-foot details {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.case-foot details pre {
+  margin-top: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.case-run {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.case-run .btn.sm {
+  margin: 0;
+}
+
+.case > pre.out {
+  margin-top: 8px;
+}
+
+.verdict {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.verdict.match {
+  color: var(--ink);
+}
+
+.verdict.match::before {
+  content: "\2713  ";
+}
+
+.verdict.differ,
+.verdict.error {
+  color: var(--bad);
+}
+
+.verdict.differ::before,
+.verdict.error::before {
+  content: "\2717  ";
+}
+
 /* ------------------------------------------------------------------ small screens */
 
 @media (max-width: 1080px) {
@@ -651,11 +971,15 @@ footer.colophon .wrap {
     display: none;
   }
   .two,
-  .diff {
+  .diff,
+  .example-body {
     grid-template-columns: minmax(0, 1fr);
   }
   .bench-head h1 {
     font-size: 25px;
+  }
+  .toc ol {
+    columns: 1;
   }
   .page-head h1 {
     font-size: 28px;
@@ -666,6 +990,13 @@ footer.colophon .wrap {
   .rules li {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
+  }
+  table.prof th:nth-child(2),
+  table.prof td:nth-child(2) {
+    display: none;
+  }
+  table.prof th:nth-child(1) {
+    width: 60%;
   }
   .editor .cm-editor {
     height: 240px;

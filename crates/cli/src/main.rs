@@ -56,14 +56,16 @@ fn main() {
     let mut cmd: Option<String> = None;
     let mut explain = false;
     let mut opts = Options::default();
+    let mut budget: Option<u64> = None;
     while let Some(a) = args.next() {
         match a.as_str() {
             "--data" => data = args.next().map(PathBuf::from),
             "-c" => cmd = args.next(),
             "--explain" => explain = true,
             "--no-opt" => opts.optimize = false,
+            "--pair-budget" => budget = args.next().and_then(|v| v.parse().ok()),
             "-h" | "--help" => {
-                println!("usage: quackless [--data DIR] [-c SQL] [--explain] [--no-opt]");
+                println!("usage: quackless [--data DIR] [-c SQL] [--explain] [--no-opt] [--pair-budget N]");
                 return;
             }
             other => {
@@ -73,6 +75,7 @@ fn main() {
         }
     }
     let mut db = Database::new();
+    db.pair_budget = budget;
     if let Some(d) = &data {
         let t = Instant::now();
         if let Err(e) = load_tpch(&mut db, d) {

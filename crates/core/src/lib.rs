@@ -83,6 +83,9 @@ impl QueryResult {
 #[derive(Default)]
 pub struct Database {
     pub catalog: Catalog,
+    /// Most row pairs nested-loop joins may compare in one query (None: no limit).
+    /// The browser sets this so a cross product cannot hang the page.
+    pub pair_budget: Option<u64>,
 }
 
 impl Database {
@@ -241,6 +244,9 @@ impl Database {
             });
         }
         let ctx = ExecCtx::new(&self.catalog, opts.int_div, opts.record);
+        if let Some(b) = self.pair_budget {
+            ctx.pair_budget.set(b);
+        }
         let mut pp = PhysicalPlanner::new(&ctx);
         let (mut op, phys) = pp.build(&optimized)?;
         let types: Vec<DataType> = schema.fields.iter().map(|f| f.dtype).collect();

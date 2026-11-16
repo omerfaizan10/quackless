@@ -6,7 +6,7 @@ use crate::eval::{compile, encode_cell, eval, PExpr};
 use crate::expr::{AggFunc, Expr};
 use crate::plan::{expr_type, unify, JoinType, LogicalPlan, Schema};
 use crate::types::*;
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::hash::{BuildHasherDefault, Hasher};
@@ -119,15 +119,43 @@ pub struct ExecCtx<'a> {
     pub trace: RefCell<Vec<TraceEvent>>,
     pub start: f64,
     pub record: bool,
+    /// Row pairs nested-loop joins may still compare before the query is
+    /// stopped. Shared with subquery contexts. u64::MAX means no limit.
+    pub pair_budget: Rc<Cell<u64>>,
 }
 
 impl<'a> ExecCtx<'a> {
     pub fn new(catalog: &'a Catalog, int_div: bool, record: bool) -> Self {
-        ExecCtx { catalog, int_div, stats: RefCell::new(Vec::new()), trace: RefCell::new(Vec::new()), start: now_ms(), record }
+        ExecCtx {
+            catalog,
+            int_div,
+            stats: RefCell::new(Vec::new()),
+            trace: RefCell::new(Vec::new()),
+            start: now_ms(),
+            record,
+            pair_budget: Rc::new(Cell::new(u64::MAX)),
+        }
     }
     /// A context for subqueries: same catalog and dialect, no instrumentation.
     pub fn child(&self) -> ExecCtx<'a> {
-        ExecCtx::new(self.catalog, self.int_div, false)
+        let mut c = ExecCtx::new(self.catalog, self.int_div, false);
+        c.pair_budget = self.pair_budget.clone();
+        c
+    }
+    /// Charge `pairs` row comparisons to the nested-loop budget.
+    pub fn charge_pairs(&self, pairs: u64) -> Result<(), String> {
+        let left = self.pair_budget.get();
+        if left == u64::MAX {
+            return Ok(());
+        }
+        if pairs > left {
+            return Err("stopped: this plan compared more row pairs in nested-loop joins than the browser allows. \
+                        Without the optimizer, every join is a nested loop over all pairs of rows, because the optimizer \
+                        is what turns equality conditions into hash join keys. Turn the optimizer on to run it."
+                .to_string());
+        }
+        self.pair_budget.set(left - pairs);
+        Ok(())
     }
 }
 
@@ -904,6 +932,7 @@ impl Operator for NestedLoopOp {
             if end < lb.rows {
                 self.pending = Some((lb.clone(), end));
             }
+            ctx.charge_pairs(((end - start) * rn) as u64)?;
             let mut li = Vec::new();
             let mut ri = Vec::new();
             for l in start..end {

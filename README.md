@@ -4,6 +4,20 @@ A columnar, vectorized SQL query engine I wrote from scratch in Rust. It compile
 
 **Live workbench:** https://quackless-sql.vercel.app (TPC-H sample loaded in the page, with the query plan replayed operator by operator)
 
+## The site
+
+- **Workbench** (`/`): write SQL or pick a TPC-H query, then:
+  - watch the physical plan replay operator by operator
+  - compare the logical plan before and after the optimizer
+  - see how many rows each operator produced
+  - browse the tables loaded in the page
+- **SQL** (`/sql/`): the dialect by example. Each example's output is the engine's own, captured at build time by `scripts/export_pages.py`.
+- **Conformance** (`/conformance/`): the TPC-H, sqllogictest, fuzzing and benchmark results below, in more detail.
+- **Fuzzer** (`/fuzzer/`): every minimized case the fuzzer saved, with a button that re-runs it in your browser and compares the answer with DuckDB's.
+- **Internals** (`/internals/`): how a query moves through the engine.
+
+The engine runs in a Web Worker, so a slow query never freezes the page, and the Stop button can kill it. In the browser, nested-loop joins may compare at most 10 million row pairs per query. With the optimizer switched off, every join is a nested loop (hash join keys come from the optimizer), so most multi-table TPC-H queries stop with an explanation instead of running for minutes.
+
 ## Results
 
 All numbers come from `make eval` and are stored in `results/`.

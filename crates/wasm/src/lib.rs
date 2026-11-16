@@ -3,6 +3,9 @@
 use quackless_core::{json, Database, Options};
 use wasm_bindgen::prelude::*;
 
+/// Row pairs a nested-loop join may compare per query in the browser.
+pub const PAIR_BUDGET: u64 = 10_000_000;
+
 #[wasm_bindgen]
 pub struct Engine {
     db: Database,
@@ -12,7 +15,10 @@ pub struct Engine {
 impl Engine {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Engine {
-        Engine { db: Database::new() }
+        let mut db = Database::new();
+        // well under a second of nested-loop work, so a cross product cannot hang the page
+        db.pair_budget = Some(PAIR_BUDGET);
+        Engine { db }
     }
 
     /// Run DDL (CREATE TABLE ...) or any statements; returns nothing on success.

@@ -6,7 +6,9 @@ import Mark from "./Mark";
 
 const NAV = [
   { href: "/", label: "Workbench" },
+  { href: "/sql/", label: "SQL" },
   { href: "/conformance/", label: "Conformance" },
+  { href: "/fuzzer/", label: "Fuzzer" },
   { href: "/internals/", label: "Internals" },
 ];
 

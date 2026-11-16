@@ -1,0 +1,169 @@
+{
+ "sections": [
+  {
+   "title": "Selecting and filtering",
+   "intro": "Column lists, aliases, WHERE with comparison, BETWEEN, IN lists and LIKE, ORDER BY with LIMIT and OFFSET.",
+   "examples": [
+    {
+     "label": "Filters",
+     "sql": "SELECT count(*) AS parts\nFROM part\nWHERE p_size BETWEEN 10 AND 12\n  AND p_brand IN ('Brand#11', 'Brand#12')\n  AND p_type NOT LIKE '%BRASS'",
+     "output": "parts\n-----\n3\n(1 row)"
+    },
+    {
+     "label": "Top N with an offset",
+     "sql": "SELECT o_orderkey, o_totalprice\nFROM orders\nORDER BY o_totalprice DESC\nLIMIT 3 OFFSET 2",
+     "output": "o_orderkey | o_totalprice\n-----------+-------------\n44707      | 431771.98\n59106      | 430619.75\n6882       | 422359.65\n(3 rows)"
+    }
+   ]
+  },
+  {
+   "title": "Joins",
+   "intro": "INNER, LEFT and CROSS joins with ON, and comma joins with the condition in WHERE. The optimizer turns equality conditions into hash join keys and picks the order.",
+   "examples": [
+    {
+     "label": "Explicit join",
+     "sql": "SELECT n_name, r_name\nFROM nation\nJOIN region ON n_regionkey = r_regionkey\nORDER BY n_name\nLIMIT 3",
+     "output": "n_name    | r_name\n----------+--------\nALGERIA   | AFRICA\nARGENTINA | AMERICA\nBRAZIL    | AMERICA\n(3 rows)"
+    },
+    {
+     "label": "Left join that keeps unmatched rows",
+     "sql": "SELECT c_mktsegment, count(o_orderkey) AS orders\nFROM customer\nLEFT JOIN orders ON o_custkey = c_custkey AND o_orderpriority = '1-URGENT'\nGROUP BY c_mktsegment\nORDER BY c_mktsegment",
+     "output": "c_mktsegment | orders\n-------------+-------\nAUTOMOBILE   | 609\nBUILDING     | 704\nFURNITURE    | 594\nHOUSEHOLD    | 602\nMACHINERY    | 511\n(5 rows)"
+    }
+   ]
+  },
+  {
+   "title": "Grouping and aggregates",
+   "intro": "count(*), count(x), count(DISTINCT x), sum, avg, min and max, with GROUP BY and HAVING. Grouping by an output position or alias works.",
+   "examples": [
+    {
+     "label": "HAVING and count(DISTINCT)",
+     "sql": "SELECT p_brand, count(*) AS parts, count(DISTINCT p_size) AS sizes\nFROM part\nGROUP BY p_brand\nHAVING count(*) > 70\nORDER BY p_brand\nLIMIT 3",
+     "output": "p_brand  | parts | sizes\n---------+-------+------\nBrand#11 | 80    | 39\nBrand#12 | 77    | 40\nBrand#13 | 81    | 45\n(3 rows)"
+    },
+    {
+     "label": "Group by a CASE expression",
+     "sql": "SELECT CASE WHEN o_totalprice > 300000 THEN 'big'\n            WHEN o_totalprice > 100000 THEN 'mid'\n            ELSE 'small' END AS size,\n       count(*) AS orders\nFROM orders\nGROUP BY 1\nORDER BY 2 DESC",
+     "output": "size  | orders\n------+-------\nmid   | 9149\nsmall | 5319\nbig   | 532\n(3 rows)"
+    }
+   ]
+  },
+  {
+   "title": "Subqueries and CTEs",
+   "intro": "EXISTS, NOT EXISTS, IN and NOT IN subqueries, scalar subqueries (correlated or not), derived tables and WITH. The binder rewrites correlated subqueries into joins.",
+   "examples": [
+    {
+     "label": "Correlated EXISTS",
+     "sql": "SELECT n_name\nFROM nation n\nWHERE EXISTS (\n  SELECT 1 FROM supplier s\n  WHERE s.s_nationkey = n.n_nationkey AND s_acctbal > 9900\n)\nORDER BY n_name",
+     "output": "n_name\n-------------\nUNITED STATES\n(1 row)"
+    },
+    {
+     "label": "Correlated scalar subquery",
+     "sql": "SELECT c_name,\n       (SELECT count(*) FROM orders WHERE o_custkey = c_custkey) AS orders\nFROM customer\nORDER BY orders DESC, c_name\nLIMIT 3",
+     "output": "c_name             | orders\n-------------------+-------\nCustomer#000000079 | 32\nCustomer#000000643 | 32\nCustomer#000000712 | 32\n(3 rows)"
+    },
+    {
+     "label": "WITH",
+     "sql": "WITH per_customer AS (\n  SELECT o_custkey, count(*) AS n FROM orders GROUP BY o_custkey\n)\nSELECT max(n) AS most_orders, round(avg(n), 2) AS average\nFROM per_customer",
+     "output": "most_orders | average\n------------+--------\n32          | 15.0\n(1 row)"
+    }
+   ]
+  },
+  {
+   "title": "Set operations",
+   "intro": "UNION, UNION ALL, EXCEPT and INTERSECT, with ORDER BY and LIMIT on the result.",
+   "examples": [
+    {
+     "label": "UNION ALL",
+     "sql": "SELECT r_name AS name FROM region\nUNION ALL\nSELECT 'ATLANTIS'\nORDER BY name\nLIMIT 3",
+     "output": "name\n-------\nAFRICA\nAMERICA\nASIA\n(3 rows)"
+    },
+    {
+     "label": "EXCEPT",
+     "sql": "SELECT n_regionkey FROM nation\nEXCEPT\nSELECT r_regionkey FROM region WHERE r_name = 'ASIA'\nORDER BY 1",
+     "output": "n_regionkey\n-----------\n0\n1\n3\n4\n(4 rows)"
+    }
+   ]
+  },
+  {
+   "title": "Arithmetic and NULL",
+   "intro": "Integer division returns a double and division by zero returns infinity, as in DuckDB. NULL propagates through arithmetic; IS [NOT] DISTINCT FROM compares NULL safely.",
+   "examples": [
+    {
+     "label": "Division",
+     "sql": "SELECT 7 / 2 AS half, 7 % 3 AS remainder, 1 / 0 AS by_zero",
+     "output": "half | remainder | by_zero\n-----+-----------+--------\n3.5  | 1         | inf\n(1 row)"
+    },
+    {
+     "label": "NULL handling",
+     "sql": "SELECT 1 + NULL AS plus_null,\n       coalesce(NULL, 2) AS first_value,\n       nullif(3, 3) AS null_if_equal,\n       NULL IS NOT DISTINCT FROM NULL AS same",
+     "output": "plus_null | first_value | null_if_equal | same\n----------+-------------+---------------+-----\nNULL      | 2           | NULL          | true\n(1 row)"
+    },
+    {
+     "label": "Casts",
+     "sql": "SELECT CAST(3.7 AS INTEGER) AS i,\n       CAST(42 AS VARCHAR) || '!' AS s,\n       CAST('12' AS DOUBLE) AS d",
+     "output": "i | s   | d\n--+-----+-----\n4 | 42! | 12.0\n(1 row)"
+    }
+   ]
+  },
+  {
+   "title": "Dates",
+   "intro": "DATE literals, INTERVAL arithmetic in days, months and years, date differences in days, EXTRACT and the matching functions.",
+   "examples": [
+    {
+     "label": "Interval arithmetic",
+     "sql": "SELECT DATE '1998-12-01' - INTERVAL '90' DAY AS cutoff,\n       DATE '2024-02-29' + INTERVAL 1 YEAR AS next_year,\n       DATE '1995-03-01' - DATE '1995-01-01' AS days",
+     "output": "cutoff     | next_year  | days\n-----------+------------+-----\n1998-09-02 | 2025-02-28 | 59\n(1 row)"
+    },
+    {
+     "label": "Parts of a date",
+     "sql": "SELECT EXTRACT(YEAR FROM DATE '1995-06-17') AS y,\n       month(DATE '1995-06-17') AS m,\n       quarter(DATE '1995-06-17') AS q,\n       dayofweek(DATE '1995-06-17') AS dow",
+     "output": "y    | m | q | dow\n-----+---+---+----\n1995 | 6 | 2 | 6\n(1 row)"
+    }
+   ]
+  },
+  {
+   "title": "Strings and numbers",
+   "intro": "String functions: || and concat, length, substring, upper, lower, trim, ltrim, rtrim, replace, reverse, starts_with, ends_with, contains, strpos. Numeric: abs, round, ceil, floor, sign, sqrt, power, ln, log10, exp, greatest, least.",
+   "examples": [
+    {
+     "label": "Strings",
+     "sql": "SELECT 'quack' || 'less' AS joined,\n       substring('quackless', 1, 5) AS sub,\n       upper(trim('  duck ')) AS cleaned,\n       replace('a-b-c', '-', '+') AS replaced,\n       starts_with('duckdb', 'duck') AS prefix",
+     "output": "joined    | sub   | cleaned | replaced | prefix\n----------+-------+---------+----------+-------\nquackless | quack | DUCK    | a+b+c    | true\n(1 row)"
+    },
+    {
+     "label": "Numbers",
+     "sql": "SELECT round(3.14159, 2) AS r,\n       power(2, 10) AS p,\n       sqrt(2.0) AS root,\n       greatest(1, 5, 3) AS g,\n       floor(-1.2) AS f",
+     "output": "r    | p      | root               | g | f\n-----+--------+--------------------+---+-----\n3.14 | 1024.0 | 1.4142135623730951 | 5 | -2.0\n(1 row)"
+    }
+   ]
+  }
+ ],
+ "unsupported": [
+  {
+   "label": "Window functions",
+   "sql": "SELECT n_name, row_number() OVER (ORDER BY n_name) FROM nation",
+   "error": "Parser error: expected end of statement near \"(\" (position 33)"
+  },
+  {
+   "label": "UPDATE and DELETE",
+   "sql": "UPDATE region SET r_name = 'X'",
+   "error": "Parser error: unsupported statement near \"update\" (position 0)"
+  },
+  {
+   "label": "VALUES as a table",
+   "sql": "SELECT * FROM (VALUES (1), (2)) AS t(x)",
+   "error": "Parser error: expected identifier near \"values\" (position 15)"
+  },
+  {
+   "label": "string_agg and other aggregates",
+   "sql": "SELECT string_agg(r_name, ', ') FROM region",
+   "error": "Catalog error: unknown function string_agg"
+  },
+  {
+   "label": "Timestamps",
+   "sql": "SELECT now()",
+   "error": "Catalog error: unknown function now"
+  }
+ ]
+}

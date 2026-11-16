@@ -17,6 +17,7 @@ test: build      ## unit tests plus every saved fuzzer regression
 
 wasm:            ## engine compiled to WebAssembly for the workbench
 	cd crates/wasm && wasm-pack build --release --target web --out-dir ../../web/src/wasm-pkg --no-pack && rm -f ../../web/src/wasm-pkg/.gitignore
+	cp web/src/wasm-pkg/quackless_wasm_bg.wasm web/public/quackless_wasm_bg.wasm
 
 tpch: build      ## 22 queries x 3 scale factors against DuckDB -> results/tpch.json
 	$(H) tpch --sf 0.01,0.1,1
@@ -36,3 +37,4 @@ eval: test tpch slt fuzz bench web
 
 web: wasm        ## copy data, engine and results into web/
 	$(PY) scripts/export_web.py
+	$(PY) scripts/export_pages.py
